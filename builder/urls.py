@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 urlpatterns = [
-     path('/', admin.site.urls),
+     path('admin/', admin.site.urls),
 
     path('variablelist/',views.variablelist,name='variablelist'),
     path('formaddnewvariable/',views.formaddnewvariable,name='formaddnewvariable'),
