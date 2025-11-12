@@ -1,0 +1,41 @@
+"""
+URL configuration for formulabuilder project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path
+from . import views
+urlpatterns = [
+     path('/', admin.site.urls),
+
+    path('variablelist/',views.variablelist,name='variablelist'),
+    path('formaddnewvariable/',views.formaddnewvariable,name='formaddnewvariable'),
+    path('addnewvariable/',views.addnewvariables,name='addnewvariable'),
+    path('variableedit/',views.variableedit,name='variableedit'),
+    path('variableupdate/',views.variableupdate,name='variableupdate'),
+    path('variabledelete/',views.variabledelete,name='variabledelete'),
+
+
+    path('formulalist/',views.formulalist,name='formulalist'),
+    path('formaddnewformula/',views.formaddnewformula,name='formaddnewformula'),
+    path('addnewformula/',views.addnewformula,name='addnewformula'),
+    path('formuladelete/',views.formuladelete,name='formuladelete'),
+    path('evaluateformula/',views.evaluateformula,name='evaluateformula'), 
+    path('evaluate/',views.evaluate,name='evaluate'),   
+
+
+    
+    
+]

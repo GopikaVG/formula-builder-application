@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <title>Edit Variable</title>
+             <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 30px;
+            color: #333;
+        }
+        h2 {
+            margin-bottom: 8px;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ddd;
+            margin-bottom: 25px;
+        }
+         
+        form {
+            background: white;
+            justify-content: center;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            margin-right: 10px;
+            margin-top: 22px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .btn-cancel:hover {
+            background-color: #dcdcdc;
+        }
+    </style>
+    </head>
+    <body>
+        <h2>Edit Variable</h2>
+            <hr><br><br>
+           <h4 style="color: red;"> {{error}}</h5>
+
+                <form action="../variableupdate/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="id" name="id" value="{{variable.id}}">
+                    <label for="name">Name : </label>
+                    <input type="text" id="name" name="name" value="{{variable.name}}" required><br><br>
+                    <label for="type"> Type : </label>
+                    <select id="type" name="type" required>
+                        <option value="CONSTANT" {% if variable.type == "CONSTANT" %} selected {% endif %}>CONSTANT</option>
+                        <option value="DYNAMIC" {% if variable.type == "DYNAMIC" %} selected {% endif %}>DYNAMIC</option>
+                    </select><br><br>
+                <label for="value">Value :</label>
+                <input type="text" id="value" name="value" value="{{variable.value}}" required placeholder="Use block letters for variables.."><br><br>
+                <button type="submit" class="btn btn-gradient-primary me-2">Update</button>
+                     
+                </form>
+                <a href="../variablelist/" class="btn btn-warning btn-sm "> Back To Variables </a>
+                </body>
+</html>

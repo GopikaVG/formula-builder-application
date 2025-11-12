@@ -1,0 +1,106 @@
+def evaluateformula(request):
+    id = request.GET.get("id")
+    formuladata = formula.objects.get(id=id)
+    expression = formuladata.expression
+
+    # Extract contextual variables "{{#var}}"
+    contextual_vars = []
+    parts = expression.split("{{#")
+    for p in parts[1:]:
+        name = p.split("}}")[0]
+        contextual_vars.append(name)
+    
+    # Extract all variable names excluding contextual variables first
+    var_names = expression.replace('+', ' ')\
+                          .replace('-', ' ')\
+                          .replace('*', ' ')\
+                          .replace('/', ' ')\
+                          .split()
+
+    # Combine all variable names (normal + contextual) uniquely
+    var_names = list(set(var_names + contextual_vars))
+    
+    variablesdata1 = variable.objects.filter(name__in=var_names)
+    formulanames = formula.objects.filter(name__in=var_names)
+    if formulanames.exists():
+        subformula_names = []
+        for f in formulanames:
+            parts = f.expression.replace('+', ' ')\
+                                .replace('-', ' ')\
+                                .replace('*', ' ')\
+                                .replace('/', ' ')\
+                                .split()
+            for p in parts:
+                if p and p not in subformula_names:
+                    subformula_names.append(p)
+        baseconstants = variable.objects.filter(name__in=subformula_names)
+        dynamic_vars = variablesdata1.filter(type='DYNAMIC')
+        variablesdata2 = list(baseconstants) + list(dynamic_vars)
+        variables_to_show = variablesdata2
+    else:
+        variables_to_show = variablesdata1
+
+    # Prepare dict to hold user inputs for evaluation
+    user_inputs = {}
+    result = None
+
+    if request.method == 'POST':
+        # Collect user submitted inputs for variables
+        for var in variables_to_show:
+            input_name = f'var_{var.id}'
+            val = request.POST.get(input_name)
+            if val is not None:
+                user_inputs[var.name] = val
+        
+        # Also collect inputs for contextual variables (custom_vars)
+        for cname in contextual_vars:
+            input_name = f'var_{cname}'
+            val = request.POST.get(input_name)
+            if val is not None:
+                user_inputs[cname] = val
+
+        # Evaluate expression with user inputs substituted
+        # For example, replace variable names in expression with values from user_inputs
+        eval_expr = expression
+        for key, val in user_inputs.items():
+            # Replace both normal vars and custom vars like {{#var}}
+            eval_expr = eval_expr.replace(key, val)
+            eval_expr = eval_expr.replace(f'{{{{#{key}}}}}', val)
+
+        try:
+            # WARNING: use safe evaluation, here just eval as example
+            result = eval(eval_expr)
+        except Exception as e:
+            result = f"Error: {e}"
+
+    return render(request, 'evaluateformula.html', {
+        'formula': formuladata,
+        'variables': variables_to_show,
+        'custom_vars': [{'name': cname, 'value': user_inputs.get(cname, '')} for cname in contextual_vars],
+        'result': result,
+        'show_inputs': True,
+    })
+
+
+
+
+    <form method="post" action="">
+  {% csrf_token %}
+  {% for var in variables %}
+    <label for="var_{{ var.id }}"> {{ var.name }}: </label>
+    <input type="text" id="var_{{ var.id }}" name="var_{{ var.id }}" value="{{ var.value|default_if_none:'' }}" required>
+    <br>
+  {% endfor %}
+
+  {% for placeholder in custom_vars %}
+    <label for="var_{{ placeholder.name }}"> {{ placeholder.name }}: </label>
+    <input type="text" id="var_{{ placeholder.name }}" name="var_{{ placeholder.name }}" value="{{ placeholder.value }}" required>
+    <br>
+  {% endfor %}
+
+  <label for="result"> Result: </label>
+  <input type="text" id="result" name="result" value="{{ result|default:'' }}" readonly>
+  <br>
+
+  <button type="submit">Evaluate</button>
+</form>

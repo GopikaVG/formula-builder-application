@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <title>Evaluate Formula</title>
+               <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 30px;
+            color: #333;
+        }
+        h2 {
+            margin-bottom: 8px;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ddd;
+            margin-bottom: 25px;
+        }
+         
+        form {
+            background: white;
+            justify-content: center;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            margin-right: 10px;
+            margin-top: 22px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .btn-cancel:hover {
+            background-color: #dcdcdc;
+        }
+    </style>
+    </head>
+    <body>
+    <hr>
+    {{error}}
+            <h1> Evaluate Formula</h1><hr>
+            <h3> Formula Name: {{ formula.name }} </h3>
+            <h3> Formula Expression: {{ formula.expression }} </h3>
+            <form method="POST" action="../evaluate/">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ formula.id }}" required>
+                {% comment %} {% for var in variables %}
+                    <label for="var_{{ var.id }}"> {{ var.name }}: </label>
+                    <input type="text" id="var_{{ var.id }}" name="var_{{ var.id }}" value="{{ var.value }}"  required> 
+                    <br>
+                {% endfor %} {% endcomment %}
+                {% for var in variables %}
+                    <label for="var_{{ var.name }}"> {{ var.name }}: </label>
+                    <input type="text" id="var_{{ var.name }}" name="var_{{ var.name }}" value="{{var.displayvalue|default:var.value }}" required>
+
+                    <br>
+                {% endfor %}
+ {% for placeholder in custom_vars %}
+                    <label for="var_{{ placeholder.name }}"> {{ placeholder.name }}: </label>
+                    <input type="text" id="var_{{ placeholder.name }}" name="var_{{ placeholder.name }}" value="{{ placeholder.value }}" required>
+ 
+                    <br>
+                {% endfor %} 
+                              
+               
+
+                <label for="result"> Result: </label>
+                <input type="text" id="result" name="result" value="{{ result|default:'' }}" readonly>
+                <br>
+                <input type="submit" value="Compute Formula" class="btn btn-primary">
+            </form>
+            <br>
+            <hr>
+            <h3> Do you want to go back to Formula details?!
+                <a href="../formulalist/" class="btn btn-warning btn-sm "> Back To Formula </a>
+                <br><br></h3>
+            </body>
+            </html>

@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <title>FORMULA BUILDER APPLICATION - Variables</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            margin-bottom: 10px;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ddd;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #eee;
+        }
+        a.btn {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: white;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        a.btn-warning {
+            background-color: #f0ad4e;
+        }
+        a.btn-warning:hover {
+            background-color: #ec971f;
+        }
+        a.btn-danger {
+            background-color: #d9534f;
+        }
+        a.btn-danger:hover {
+            background-color: #c9302c;
+        }
+        a.link-primary {
+            color: #0275d8;
+            font-weight: bold;
+        }
+        a.link-primary:hover {
+            text-decoration: underline;
+        }
+        .btn-space {
+            margin-right: 8px;
+        }
+    </style>
+    </head>
+    <body>
+        <h1>FORMULA BUILDER APPLICATION</h1>
+        <hr>
+        <h1> Variable details</h1>
+            <hr>
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+            {% for i in variables %}
+            <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.type }}</td> 
+                <td>{{ i.value }}</td>
+                <td><a href="../variableedit?id={{i.id}}"class="btn btn-warning btn-sm">edit</a></td>
+                <td><a href="../variabledelete?id={{i.id}}"class="btn btn-danger btn-sm">delete</a></td>
+            </tr>
+            {% endfor %}
+            </table>
+
+            <h3> Do you want to add new variables?!
+                <a href="../formaddnewvariable/" class="btn btn-warning btn-large" > ADD NEW VARIABLE </a>
+            </h3>
+            <h3> Do you want to see formula details?!
+                <a href="../formulalist/" class="btn btn-warning btn-large"> FORMULA DETAILS</a>
+
+            <br>
+            <br>
+            
+    </body>
+</html>
