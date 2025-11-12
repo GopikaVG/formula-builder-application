@@ -27,6 +27,9 @@ SECRET_KEY = 'django-insecure-m4=e)vjz3$uy&^jp)3v&#=0==-_rylehkp8-u_90l)8d)b_oah
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    "https://formula-builder-application.onrender.com"
+]
 
 
 # Application definition
