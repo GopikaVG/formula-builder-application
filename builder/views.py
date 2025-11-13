@@ -25,7 +25,7 @@ def addnewvariables(request):
     elif variable.objects.filter(name=value).exists():
         variabledata.value=value
     else:   
-        return render(request,'variableedit.html',{'error':"Value must be a number or an existing variable name",'variable':variabledata})
+        return render(request,'addnewvariable.html.html',{'error':"Value must be a number or an existing variable name",'variable':variabledata})
     
 
     if (variable.objects.filter(name=variabledata.name)).exists():
