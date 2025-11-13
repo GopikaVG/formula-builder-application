@@ -17,15 +17,7 @@ def addnewvariables(request):
     variabledata.name=(request.POST.get("name")).upper()
     variabledata.type=request.POST.get("type")
     value=request.POST.get("value")
-    #need to ensure value is an number or another variable name
-    if '.' in value:
-        variabledata.value=float(value)
-    elif value.isnumeric():
-        variabledata.value=int(value)
-    elif variable.objects.filter(name=value.upper()).exists():
-        variabledata.value=value.upper()
-    else:   
-        return render(request,'addnewvariable.html',{'error':"Value must be a number or an existing variable name",'variable':variabledata})
+    
    
     if (variable.objects.filter(name=variabledata.name)).exists():
         return render(request,'addnewvariable.html',{'error':"Variable with this name already exists.Does not allow duplicate values",'name':request.POST.get("name"), 'type':request.POST.get("type"), 'value':request.POST.get("value")})
