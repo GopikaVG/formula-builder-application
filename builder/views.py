@@ -18,14 +18,14 @@ def addnewvariables(request):
     variabledata.type=request.POST.get("type")
     value=request.POST.get("value")
     #need to ensure value is an number or another variable name
-    if '.' in value:
-        variabledata.value=float(value)
-    elif value.isnumeric():
-        variabledata.value=int(value)
-    elif variable.objects.filter(name=value).exists():
-        variabledata.value=value
-    else:   
-        return render(request,'addnewvariable.html.html',{'error':"Value must be a number or an existing variable name",'variable':variabledata})
+    # if '.' in value:
+    #     variabledata.value=float(value)
+    # elif value.isnumeric():
+    #     variabledata.value=int(value)
+    # elif variable.objects.filter(name=value).exists():
+    #     variabledata.value=value
+    # else:   
+    #     return render(request,'addnewvariable.html.html',{'error':"Value must be a number or an existing variable name",'variable':variabledata})
     
 
     if (variable.objects.filter(name=variabledata.name)).exists():
