@@ -17,14 +17,53 @@ def addnewvariables(request):
     variabledata.name=(request.POST.get("name")).upper()
     variabledata.type=request.POST.get("type")
     value=request.POST.get("value")
-    
-   
+
     if (variable.objects.filter(name=variabledata.name)).exists():
         return render(request,'addnewvariable.html',{'error':"Variable with this name already exists.Does not allow duplicate values",'name':request.POST.get("name"), 'type':request.POST.get("type"), 'value':request.POST.get("value")})
+    
+    if variabledata.type != "DYNAMIC":
+        # need to ensure it will be a number should accept both integer and floating point
+        if '.' in value:
+            variabledata.value=float(value)
+        elif value.isnumeric():
+            variabledata.value=int(value)
+        # elif variable.objects.filter(name=value).exists():
+        #     variabledata.value=value
+        else:   
+            return render(request,'addnewvariable.html',{'error':"Value must be a number or an existing variable name",'name':request.POST.get("name"), 'type':request.POST.get("type"), 'value':request.POST.get("value")})
+        
     else:
-        variabledata.save()
-        data=variable.objects.all()
-        return render(request,'variables.html',{'variables':data})
+        # if dynamic value and it can be an expression,so split it and check whether each variable exists and then save it as the expression itself
+        value=value.upper()
+        expnames=value.replace('+', ' ')\
+                                    .replace('-', ' ')\
+                                    .replace('*', ' ')\
+                                    .replace('/', ' ')\
+                                    .replace('(', ' ')\
+                                     .replace(')', ' ')\
+                                    .split()
+        expnames=list(expnames)
+        clean_names = []
+        for name in expnames:
+            #  Ignore placeholders like {{#NUM_OF_DAYS}}
+            if name.startswith("{{#") and name.endswith("}}"):
+                continue
+            if name:
+                if not name.isdigit():   # want to include nuemerical values as well
+                    
+                    clean_names.append(name)
+        if clean_names and not variable.objects.filter(name__in=clean_names).exists():
+            return render(request, 'addnewvariable.html', {
+                'error': "Expression contains undefined variables. Add them to the variables first.",
+                'name': request.POST.get("name"),
+                'type': request.POST.get("type"),
+                'value': request.POST.get("value")
+            })
+        else:
+            variabledata.value=value
+    variabledata.save()
+    data=variable.objects.all()
+    return render(request,'variables.html',{'variables':data})
 
     
 def variableedit(request):
