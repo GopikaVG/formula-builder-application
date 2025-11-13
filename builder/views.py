@@ -104,8 +104,9 @@ def addnewformula(request):
         #  Ignore placeholders like {{#NUM_OF_DAYS}}
         if name.startswith("{{#") and name.endswith("}}"):
             continue
-        if name:  # skip blanks
-            clean_names.append(name)
+        if name: 
+            if not name.isdigit(): 
+                clean_names.append(name)
     if clean_names and not variable.objects.filter(name__in=clean_names).exists():
         return render(request, 'addnewformula.html', {
             'error': "Expression contains undefined variables. Add them to the variables first.",
