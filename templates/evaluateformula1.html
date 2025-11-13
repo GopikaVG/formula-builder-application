@@ -83,13 +83,13 @@
             <h1> Evaluate Formula</h1><hr>
             <h3> Formula Name: {{ formula.name }} </h3>
             <h3> Formula Expression: {{ formula.expression }} </h3>
-            <form method="POST" action="../evaluate/">
+            <form method="POST" action="">
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ formula.id }}" required>
                
                 {% for var in variables %}
                     <label for="var_{{ var.id }}"> {{ var.name }}: </label>
-                    <input type="text" id="var_{{ var.id }}" name="var_{{ var.id }}" value="{{ var.displayvalue }}"  required> 
+                    <input type="text" id="var_{{ var.id }}" name="var_{{ var.id }}" value="{{ var.displayvalue }}" readonly required> 
                     <br>
                 {% endfor %}
 
@@ -98,7 +98,7 @@
                 <label for="result"> Result: </label>
                 <input type="text" id="result" name="result" value="{{ result|default:'' }}" readonly>
                 <br>
-                <input type="submit" value="Compute Formula" class="btn btn-primary">
+                <!-- <input type="submit" value="Compute Formula" class="btn btn-primary"> -->
             </form>
             <br>
             <hr>
